@@ -41,7 +41,7 @@ export default class Home extends Component {
         }
     }
 
-    componentWillMount() {
+    componentDidMount() {
         this._loadSwiperImagesData();
         this._loadCategoryData();
         this._loadProductListData();
@@ -50,10 +50,10 @@ export default class Home extends Component {
 
 //分类数据
     _loadCategoryData() {
-        fetch('https://xcx.chaoshi.dqccc.net//DqcccXCXV/v1/Index.asmx/TopCategory', {
+        fetch('https://xcx.chaoshi.dqccc.net/DqcccXCXV/v1/Index.asmx/TopCategory', {
             method: 'POST',
             headers: {'content-type': 'application/x-www-form-urlencoded'},
-            body: 'appAuth=mw/53y8j1v/DYGfCaiE7RzcuOtyD4vZ2&device_type=3'
+            body: 'appAuth=mw/53y8j1v/DYGfCaiE7RzcuOtyD4vZ2&device_type=3',
         }).then((response) => response.json())
             .then((responseJson) => {
                 const list = [];
@@ -165,7 +165,11 @@ export default class Home extends Component {
 
     _onPressCateListItem(e: Object) {
         console.log(e)
-        this.props.navigation.navigate('ProList',{cid:e.id,name:e.name,type:e.type})
+        if (e.name == '全部分类'){
+            this.props.navigation.navigate('Category')
+        } else {
+            this.props.navigation.navigate('ProList',{cid:e.id,name:e.name,type:e.type})
+        }
     }
 
     _onPressProListItem(e: Object) {

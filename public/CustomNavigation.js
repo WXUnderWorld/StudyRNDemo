@@ -14,32 +14,49 @@ import {
 
 const scale = PixelRatio.get();
 
-export default class CustomNavigation extends Component{
-    constructor(props){
+export default class CustomNavigation extends Component {
+    constructor(props) {
         super(props)
         this.state = {
-            showBack:true
+            showBack: false
         }
+
     }
 
-    componentWillMount(){
+    componentWillMount() {
         this.setState({
-            showBack:this.props.showBack
+            showBack: this.props.showBack
         })
     }
 
+    _navigationBar = () => {
+        let nav;
+        if (this.state.showBack == true) {
+            nav = (
+                <View style={styles.navigation}>
+                    <TouchableOpacity style={styles.backBtn} onPress={() => {
+                        this.props.navigation.goBack();
+                    }}>
+                        <Image source={{uri: 'fanhui', scale: scale}} style={styles.backImage}/>
+                    </TouchableOpacity>
+                    <Text style={styles.nav_title}>{this.props.nav_title}</Text>
+                </View>
+            )
+        } else {
+            nav = (
+                <View style={styles.navigation}>
+                    <Text style={styles.nav_title}>{this.props.nav_title}</Text>
+                </View>
+            )
+        }
+
+        return nav;
+    }
 
 
-    render(){
-        return(
-            <View style={styles.navigation}>
-                <TouchableOpacity style={styles.backBtn} onPress={()=>{
-                    this.props.navigation.goBack();
-                }}>
-                    <Image source={{uri:'fanhui', scale:scale}} style={styles.backImage}/>
-                </TouchableOpacity>
-                <Text style={styles.nav_title}>{this.props.nav_title}</Text>
-            </View>
+    render() {
+        return (
+            this._navigationBar()
         )
     }
 
@@ -67,13 +84,13 @@ const styles = StyleSheet.create({
         position: 'absolute',
         left: 0,
         top: 20,
-        width:80,
-        height:44
+        width: 80,
+        height: 44
     },
     backImage: {
-        marginLeft:12,
-        marginTop:13,
-        width:12,
-        height:18,
+        marginLeft: 12,
+        marginTop: 13,
+        width: 12,
+        height: 18,
     },
 })

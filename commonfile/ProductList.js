@@ -63,6 +63,10 @@ export default class ProductList extends Component {
     }
 
     componentWillMount() {
+
+    }
+
+    componentDidMount(){
         this._loadProductListData();
     }
 
@@ -155,7 +159,8 @@ export default class ProductList extends Component {
     render() {
         return (
             <View style={styles.contrainer_V}>
-                <CustomNavigation navigation={this.props.navigation} nav_title={this.state.title}/>
+                <CustomNavigation navigation={this.props.navigation}
+                                  nav_title={this.state.title} showBack={true}/>
                 <FlatList style={styles.flatList} data={this.state.proList}
                           renderItem={this._renderItem}
                           ItemSeparatorComponent={this._separator}

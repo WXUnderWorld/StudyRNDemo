@@ -111,6 +111,7 @@ const RootNavigator = StackNavigator(
         Tab: {screen: Tab},
         ProList: {screen: ProList},
         ProDetail: {screen: ProDetail},
+        Category:{screen: Category}
     },
     {
         headerMode: 'none',

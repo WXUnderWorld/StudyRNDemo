@@ -31,7 +31,8 @@ export default class ProductDetail extends Component {
     render() {
         return (
             <View style={styles.contrainer_V}>
-                <CustomNavigation navigation={this.props.navigation} nav_title={this.state.title}/>
+                <CustomNavigation navigation={this.props.navigation}
+                                  nav_title={this.state.title} showBack={true}/>
             </View>
         )
     }
