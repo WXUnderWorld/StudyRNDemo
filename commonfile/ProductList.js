@@ -60,28 +60,53 @@ export default class ProductList extends Component {
             title: this.props.navigation.state.params.name,
             type: this.props.navigation.state.params.type,
         }
+
     }
 
     componentWillMount() {
-
-    }
-
-    componentDidMount(){
         this._loadProductListData();
     }
 
     _loadProductListData() {
         this.setState({
-            showHUD: true
+            showHUD: true,
         })
-        fetch('https://xcx.chaoshi.dqccc.net/Revision201703/Activity.asmx/ProductsRec', {
+        let formData = new FormData();
+        formData.append("appAuth", "mw/53y8j1v/DYGfCaiE7RzcuOtyD4vZ2");
+        formData.append("device_type", "3");
+        formData.append('cid', this.state.cid);
+        formData.append('callback', this.state.callback);
+        formData.append('mod', 'new');
+        formData.append('brandid', '0');
+        formData.append('sort', '0');
+        formData.append('attrvalues','');
+        formData.append('price','');
+        fetch('https://xcx.chaoshi.dqccc.net/Product/List.asmx/ProductPagedList', {
             method: 'POST',
             headers: {'content-type': 'application/x-www-form-urlencoded'},
-            body: "appAuth=mw/53y8j1v/DYGfCaiE7RzcuOtyD4vZ2&device_type=3&cid=" + this.state.cid +
-            "&type=0" + this.state.type + "&callback=" + this.state.callback,
+            body: formData
         }).then((response) => response.json())
             .then((responseJson) => {
                 console.log(responseJson)
+                if (responseJson.status != 200) {
+                    alert('数据出错，请稍后再试')
+                    this.setState({
+                        showHUD: false,
+                        footerRefreshState: 'noMoreData',
+                        isRefreshing: false,
+                    })
+                    return;
+                }
+                if (responseJson.totalcount == 0) {
+                    alert('暂无数据')
+                    this.setState({
+                        showHUD: false,
+                        footerRefreshState: 'noMoreData',
+                        isRefreshing: false,
+                    })
+                    return;
+                }
+
                 if (this.state.callback == '') {
                     this.state.proList = [];
                 }
@@ -94,7 +119,7 @@ export default class ProductList extends Component {
                     isFooterRefreshing: false,
                     has_more: responseJson.has_more,
                     showHUD: false,
-                    footerRefreshState: responseJson.has_more =='0'?'noMoreData':'refreshing'
+                    footerRefreshState: responseJson.has_more == '0' ? 'noMoreData' : 'refreshing'
                 })
 
             }).catch((error) => {
@@ -106,7 +131,7 @@ export default class ProductList extends Component {
         let _item = item.item;
         return (
             <TouchableOpacity activeOpacity={1} onPress={this._onPressItem}>
-                <View style={styles.cell}>
+                <View style={styles.cell} key={item.index}>
                     <Image source={{uri: _item.proimg}} style={styles.cellImage}/>
                     <View style={styles.cellRight}>
                         <Text style={styles.cellTitle} numberOfLines={2}>{_item.proname}</Text>
@@ -117,8 +142,8 @@ export default class ProductList extends Component {
         )
     }
 
-    _onPressItem = (item)=>{
-        this.props.navigation.navigate('ProDetail',item);
+    _onPressItem = (item) => {
+        this.props.navigation.navigate('ProDetail', item);
     }
 
     //分割线
@@ -134,7 +159,7 @@ export default class ProductList extends Component {
     //下拉刷新
     _onRefresh = () => {
         this.setState({
-            footerRefreshState: true
+            isRefreshing: true
         })
         this.state.callback = '';
         this.state.proList = [];
@@ -165,7 +190,7 @@ export default class ProductList extends Component {
                           renderItem={this._renderItem}
                           ItemSeparatorComponent={this._separator}
                           onRefresh={this._onRefresh} refreshing={this.state.isRefreshing}
-                          ListFooterComponent = {()=>{
+                          ListFooterComponent={() => {
                               return (
                                   <FooterRefreshView refreshState={this.state.footerRefreshState}/>
                               )
@@ -179,9 +204,9 @@ export default class ProductList extends Component {
 
 
 const styles = StyleSheet.create({
-    change:{
-        position:'absolute',
-        right:10,
+    change: {
+        position: 'absolute',
+        right: 10,
 
     },
     contrainer_V: {

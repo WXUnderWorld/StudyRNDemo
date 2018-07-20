@@ -37,6 +37,7 @@ const Tab = TabNavigator(
                         source={{uri: 'tab_home'}}
                     />
                 ),
+
                 tabBarOnPress: (obj) => {
                     console.log(obj);
                     obj.jumpToIndex(obj.scene.index)
