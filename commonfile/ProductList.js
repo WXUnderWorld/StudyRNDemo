@@ -64,6 +64,7 @@ export default class ProductList extends Component {
     }
 
     componentWillMount() {
+        console.log('开始加在')
         this._loadProductListData();
     }
 
@@ -88,6 +89,7 @@ export default class ProductList extends Component {
         }).then((response) => response.json())
             .then((responseJson) => {
                 console.log(responseJson)
+                console.log('加载完成')
                 if (responseJson.status != 200) {
                     alert('数据出错，请稍后再试')
                     this.setState({
@@ -130,7 +132,10 @@ export default class ProductList extends Component {
     _renderItem = (item) => {
         let _item = item.item;
         return (
-            <TouchableOpacity activeOpacity={1} onPress={this._onPressItem}>
+            <TouchableOpacity activeOpacity={1} onPress={()=>{
+                this.props.navigation.navigate('ProDetail',{pid:_item.proid})
+            }}>
+
                 <View style={styles.cell} key={item.index}>
                     <Image source={{uri: _item.proimg}} style={styles.cellImage}/>
                     <View style={styles.cellRight}>
@@ -142,9 +147,6 @@ export default class ProductList extends Component {
         )
     }
 
-    _onPressItem = (item) => {
-        this.props.navigation.navigate('ProDetail', item);
-    }
 
     //分割线
     _separator = () => {
@@ -158,6 +160,7 @@ export default class ProductList extends Component {
 
     //下拉刷新
     _onRefresh = () => {
+        console.log('下拉刷新')
         this.setState({
             isRefreshing: true
         })
@@ -168,6 +171,7 @@ export default class ProductList extends Component {
 
     //上拉加载
     _onEndReached = () => {
+        console.log('上拉加载')
         if (this.state.isFooterRefreshing) {
             return;
         }
@@ -181,20 +185,27 @@ export default class ProductList extends Component {
         this._loadProductListData();
     }
 
+    _keyExtractor = (item, index) => index;
+
     render() {
         return (
             <View style={styles.contrainer_V}>
                 <CustomNavigation navigation={this.props.navigation}
                                   nav_title={this.state.title} showBack={true}/>
-                <FlatList style={styles.flatList} data={this.state.proList}
+                <FlatList style={styles.flatList}
+                          data={this.state.proList}
                           renderItem={this._renderItem}
                           ItemSeparatorComponent={this._separator}
-                          onRefresh={this._onRefresh} refreshing={this.state.isRefreshing}
+                          onRefresh={this._onRefresh}
+                          refreshing={this.state.isRefreshing}
                           ListFooterComponent={() => {
                               return (
                                   <FooterRefreshView refreshState={this.state.footerRefreshState}/>
                               )
-                          }} onEndReached={this._onEndReached} onEndReachedThreshold={20}>
+                          }}
+                          onEndReached={this._onEndReached}
+                          onEndReachedThreshold={1}
+                          keyExtractor={this._keyExtractor}>
                 </FlatList>
                 <LoadingHUD show={this.state.showHUD}/>
             </View>

@@ -144,6 +144,7 @@ export default class Category extends Component {
                                  sections={this._sections()}
                                  renderItem={this._renderSectionItem}
                                  renderSectionHeader={this._renderSectionHeader}
+                                 stickySectionHeadersEnabled={true}
                     />
                 </View>
                 <LoadingHUD show={this.state.showHUD}/>

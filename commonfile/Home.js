@@ -164,7 +164,6 @@ export default class Home extends Component {
     }
 
     _onPressCateListItem(e: Object) {
-        console.log(e)
         if (e.name == '全部分类'){
             this.props.navigation.navigate('Category')
         } else {
@@ -173,7 +172,7 @@ export default class Home extends Component {
     }
 
     _onPressProListItem(e: Object) {
-        this.props.navigation.navigate('ProDetail')
+        this.props.navigation.navigate('ProDetail',{pid:e.proid})
     }
 
     _onRefreshing() {

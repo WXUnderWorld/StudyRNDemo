@@ -15,6 +15,9 @@ import {
 
 
 
+import CustomNavigation from '../public/CustomNavigation'
+
+
 export default class Cart extends Component{
     static navigationOptions = ({navigation}) => ({
         title: '购物车'
@@ -22,7 +25,12 @@ export default class Cart extends Component{
 
     render(){
         return(
-            <View/>
+            <View>
+                <View style={{flex:1}}>
+                    <CustomNavigation navigation={this.props.navigation}
+                                      nav_title='购物车'/>
+                </View>
+            </View>
         )
     }
 }
